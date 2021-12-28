@@ -57,7 +57,7 @@ const NavBar = () => {
                     <div className="">
                         <ul className="flex space-x-6 cursor-pointer">
                             <li className="py-2">
-                                <Link to="/" className={"text-xl font-bold"}>KM Blog</Link>
+                                <Link to="/" className={"text-xl font-bold"}>Restaurant App</Link>
                             </li>
                         </ul>
                     </div>
