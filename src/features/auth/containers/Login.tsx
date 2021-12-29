@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import FormError, { ErrorMessage } from "../../../shared/error/FormError";
 import { SubmitButton } from "../../../shared/button";
 import Header from "../../../shared/Header";
-import { login } from "../authSlice";
 import { signInWithGoogle } from "../../../utils/firebase";
 import { useAuth } from "../../../context/AuthContext";
+import useMounted from "../../../hooks/useMounted";
 
 export const Login = () => {
-    const dispatch = useDispatch();
     const {
         register,
         handleSubmit,
@@ -25,17 +23,23 @@ export const Login = () => {
 
     const { loginUser } = useAuth();
 
+    const mounted = useMounted();
+
     const onSubmit = () => {
-        if (loginUser) {
+        if (loginUser && mounted) {
             setLoading(true);
             loginUser(email, password)
                 .then(res => {
-                    setLoading(false);
-                    navigate('/profile')
+                    if (mounted) {
+                        setLoading(false);
+                        navigate('/profile')
+                    }
                 })
                 .catch(err => {
-                    setLoading(false);
-                    setErrorMessage(err.message)
+                    if (mounted) {
+                        setLoading(false);
+                        setErrorMessage(err.message)
+                    }
                 });
         }
     };
@@ -57,24 +61,28 @@ export const Login = () => {
     const loginWithGoogle = () => {
         signInWithGoogle()
             .then((res) => {
-                setLoading(false);
-                navigate('/profile')
+                if (mounted) {
+                    setLoading(false);
+                    navigate('/profile')
+                }
             })
             .catch((err) => {
-                setErrorMessage(err.message)
-                setLoading(false);
+                if (mounted) {
+                    setErrorMessage(err.message)
+                    setLoading(false);
+                }
             });;
     };
 
     return (
-        <div className="py-16">
+        <div className="py-16 mx-2">
             <Header title="LOGIN" description="Log in to your account." />
             <form
-                className="flex flex-col mx-auto w-3/4 md:w-1/2 lg:w-1/3 bg-white shadow-lg p-8"
+                className="flex flex-col w-full md:w-1/2 lg:w-1/3 bg-white shadow-lg p-4 mx-auto"
                 onSubmit={handleSubmit(onSubmit)}
                 onChange={handleChange}
             >
-                <h2 className="text-2xl mb-4 font-bold">Log In To Your Account </h2>
+                <h2 className="lg:text-2xl text-lg mb-4 font-bold">Log In To Your Account </h2>
                 <div
                     className={`mb-2 ${errorMessage ? "block" : "hidden"
                         } duration-300 transition-all`}

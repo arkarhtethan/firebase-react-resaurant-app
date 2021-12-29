@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import useMounted from '../../../hooks/useMounted';
+import { createUser } from '../../../services/user';
 import { SubmitButton } from '../../../shared/button';
 import FormError, { ErrorMessage } from '../../../shared/error/FormError';
 import Header from '../../../shared/Header';
@@ -9,28 +11,38 @@ import Header from '../../../shared/Header';
 export const Register = () => {
     const [errorMessage, setErrorMessage] = useState(null);
 
-    const { register, getValues, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange' });
+    const { register, getValues, watch, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange' });
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const { email, password } = getValues();
+    const { email, password, name } = watch();
     const { registerUser } = useAuth();
+    const mounted = useMounted();
+
+    const onFinish = (data: any) => {
+        console.log();
+        if (mounted) {
+            createUser({ name, email, id: data.user.uid })
+            setLoading(false);
+            navigate('/auth/login')
+        };
+    }
 
     const onSubmit = () => {
         setLoading(true);
         if (registerUser) {
-            registerUser(email, password).then(res => {
-                setLoading(false);
-                navigate('/auth/login')
-            }).catch(err => {
-                setLoading(false);
-                setErrorMessage(err.message)
+            registerUser(email, password).then(onFinish).catch(err => {
+                if (mounted) {
+                    setLoading(false);
+                    setErrorMessage(err.message);
+                }
             });
         }
     }
 
     const isValid = () => {
-        return (email && email.length !== 0)
-            && (password && password.length !== 0)
+        const data = [email, password, name];
+        const isDataValid = data.every(item => item && item.length !== 0);
+        return isDataValid
             && Object.entries(errors).length === 0;
     }
 
@@ -39,13 +51,24 @@ export const Register = () => {
     }
 
     return (
-        <div className="lg:pt-8 py-10">
+        <div className="lg:pt-8 py-10 mx-2">
             <Header title="Register" description="Create account at KM DAILY." />
-            <form className="flex flex-col mx-auto w-3/4 md:w-1/2 lg:w-1/3 bg-white p-8 shadow-xl" onChange={handleChange} onSubmit={handleSubmit(onSubmit)}>
-                <h2 className="text-2xl mb-4 font-bold">Create Your Account </h2>
+            <form className="flex flex-col mx-auto w-full md:w-1/2 lg:w-1/3 bg-white p-4 shadow-xl" onChange={handleChange} onSubmit={handleSubmit(onSubmit)}>
+                <h2 className="lg:text-2xl text-lg font-bold">Create Your Account </h2>
                 <div className="mb-2">
                     {(errorMessage) && <FormError message={errorMessage} onClick={() => setErrorMessage(null)} />}
                 </div>
+                <input
+                    {...register("name", {
+                        required: {
+                            value: true,
+                            message: "This field is required."
+                        },
+                    })}
+                    placeholder="Your Name"
+                    className="border-2 border-black p-2 md:mb-4 mb-2"
+                />
+                {errors.name && <ErrorMessage message={errors.name.message} />}
                 <input
                     {...register("email", {
                         required: {
