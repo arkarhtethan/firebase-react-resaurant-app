@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom';
 import { useMediaQuery } from "react-responsive";
-import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
-import { RootState } from '../app/store';
-import { removeToken } from '../features/auth/services/localstorage.service';
+import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
-    const dispatch = useDispatch();
-    const user = useSelector((state: RootState) => state.auth.user);
+    const { currentUser: user, logoutUser } = useAuth();
+
     const [open, setOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -23,8 +21,9 @@ const NavBar = () => {
     }, [user, openDropdown])
 
     const logoutHandler = () => {
-        removeToken();
-        dispatch(logout())
+        if (logoutUser) {
+            logoutUser();
+        }
     }
 
     const Dropdown = () => {
@@ -32,7 +31,7 @@ const NavBar = () => {
             <div className="relative inline-block text-left">
                 <div>
                     <button onClick={() => setOpenDropdown(!openDropdown)} type="button" className="inline-flex justify-center w-full px-0 lg:px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none">
-                        {user && user.name}
+                        {user && user.email}
                         <svg className="-mr-1 lg:ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
@@ -59,12 +58,17 @@ const NavBar = () => {
                             <li className="py-2">
                                 <Link to="/" className={"text-xl font-bold"}>Restaurant App</Link>
                             </li>
+
+                            <li className="py-2">
+                                <Link to="/profile" className={"text-xl font-bold"}>Profile</Link>
+                            </li>
+
                         </ul>
                     </div>
                 </div>
                 <div className="hidden lg:flex">
                     <div className="text-sm font-bold">
-                        {user?.name ? <Dropdown /> : <>  <NavLink className={({ isActive }) => isActive ? "text-blue-500" : ""} to="/auth/login">
+                        {user?.email ? <Dropdown /> : <>  <NavLink className={({ isActive }) => isActive ? "text-blue-500" : ""} to="/auth/login">
                             Login
                         </NavLink>
                             <span className='mx-3'>/</span>
@@ -80,7 +84,10 @@ const NavBar = () => {
             <div className={`lg:hidden flex justify-between items-center px-3`}>
                 <h3 className="font-extrabold text-2xl tracking-widest">
                     <Link to="/">
-                        KVlog
+                        Restaurant App
+                    </Link>
+                    <Link to="/profile">
+                        Profile
                     </Link>
                 </h3>
                 <button className="outline-none mobile-menu-button" onClick={() => setOpen(!open)}>
@@ -102,7 +109,7 @@ const NavBar = () => {
                 <ul className="mt-4">
                     <li className=""><Link to="/" className="block text-sm px-2 py-4 hover:text-black">Home</Link></li>
                     <li className="px-2 py-4 text-sm">
-                        {user?.name ? <Dropdown /> :
+                        {user?.email ? <Dropdown /> :
                             <>
                                 <Link to="/auth/login">
                                     Login
