@@ -4,7 +4,7 @@ import { useMediaQuery } from "react-responsive";
 import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
-    const { currentUser: user, logoutUser } = useAuth();
+    const { userInfo, logoutUser } = useAuth();
 
     const [open, setOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -14,10 +14,10 @@ const NavBar = () => {
     });
 
     useEffect(() => {
-        if (!user && openDropdown) {
+        if (!userInfo && openDropdown) {
             setOpenDropdown(false);
         }
-    }, [user, openDropdown])
+    }, [userInfo, openDropdown])
 
     const logoutHandler = () => {
         if (logoutUser) {
@@ -30,7 +30,7 @@ const NavBar = () => {
             <div className="relative inline-block text-left">
                 <div>
                     <button onClick={() => setOpenDropdown(!openDropdown)} type="button" className="inline-flex justify-center w-full px-0 lg:px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none">
-                        {user && user.email}
+                        {userInfo && userInfo.email}
                         <svg className="-mr-1 lg:ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
@@ -67,7 +67,7 @@ const NavBar = () => {
                 </div>
                 <div className="hidden lg:flex">
                     <div className="text-sm font-bold">
-                        {user?.email ? <Dropdown /> : <>  <NavLink className={({ isActive }) => isActive ? "text-blue-500" : ""} to="/auth/login">
+                        {userInfo?.email ? <Dropdown /> : <>  <NavLink className={({ isActive }) => isActive ? "text-blue-500" : ""} to="/auth/login">
                             Login
                         </NavLink>
                             <span className='mx-3'>/</span>
@@ -108,7 +108,7 @@ const NavBar = () => {
                 <ul className="mt-4">
                     <li className=""><Link to="/" className="block text-sm px-2 py-4 hover:text-black">Home</Link></li>
                     <li className="px-2 py-4 text-sm">
-                        {user?.email ? <Dropdown /> :
+                        {userInfo?.email ? <Dropdown /> :
                             <>
                                 <Link to="/auth/login">
                                     Login
