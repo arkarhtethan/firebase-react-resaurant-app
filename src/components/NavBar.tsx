@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom';
 import { useMediaQuery } from "react-responsive";
-import { logout } from '../features/auth/authSlice';
 import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
