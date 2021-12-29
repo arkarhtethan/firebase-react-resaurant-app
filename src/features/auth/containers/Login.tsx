@@ -6,7 +6,8 @@ import FormError, { ErrorMessage } from "../../../shared/error/FormError";
 import { SubmitButton } from "../../../shared/button";
 import Header from "../../../shared/Header";
 import { login } from "../authSlice";
-
+import { signInWithGoogle } from "../../../utils/firebase";
+import { useAuth } from "../../../context/AuthContext";
 
 export const Login = () => {
     const dispatch = useDispatch();
@@ -22,8 +23,21 @@ export const Login = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const { loginUser } = useAuth();
+
     const onSubmit = () => {
-        // loginMutation({ variables: { loginInput: { ...getValues() } } });
+        if (loginUser) {
+            setLoading(true);
+            loginUser(email, password)
+                .then(res => {
+                    setLoading(false);
+                    navigate('/profile')
+                })
+                .catch(err => {
+                    setLoading(false);
+                    setErrorMessage(err.message)
+                });
+        }
     };
 
     const isValid = () => {
@@ -38,6 +52,18 @@ export const Login = () => {
 
     const handleChange = () => {
         setErrorMessage(null);
+    };
+
+    const loginWithGoogle = () => {
+        signInWithGoogle()
+            .then((res) => {
+                setLoading(false);
+                navigate('/profile')
+            })
+            .catch((err) => {
+                setErrorMessage(err.message)
+                setLoading(false);
+            });;
     };
 
     return (
@@ -85,20 +111,33 @@ export const Login = () => {
                     className="border-2 border-black p-2 md:mb-4 mb-2"
                 />
                 {errors.password && <ErrorMessage message={errors.password.message} />}
-                {/* use in nromal design */}
-                <SubmitButton
-                    loading={loading}
-                    buttonText="Login"
-                    isValid={isValid()}
-                />
-                {/* when sending request */}
-                <Link
-                    to="/auth/register"
-                    className="text-center border-black border-2 text-black py-2"
+                <div className="flex space-x-3">
+                    <SubmitButton
+                        loading={loading}
+                        buttonText="Login"
+                        classes="w-full"
+                        isValid={isValid()}
+                    />
+                </div>
+                <div
+                    className="flex items-center justify-between w-full"
                 >
-                    {" "}
-                    REGISTER{" "}
-                </Link>
+                    <Link to="/auth/register" className="text-sm font-bold text-gray-500">
+                        Forgot Password
+                    </Link>
+                    <Link to="/auth/register" className="text-sm text-gray-500 font-bold">
+                        Register
+                    </Link>
+                </div>
+                <div className="flex items-center my-2">
+                    <hr className="border-gray-500 w-full" />
+                    <p className="mx-2">OR</p>
+                    <hr className="border-gray-500 w-full" />
+                </div>
+                <div onClick={loginWithGoogle} className="text-center border-black border-2 text-black py-2 flex justify-center items-center cursor-pointer">
+                    <span className="mr-2 font-bold text-xl">G</span>
+                    <p className="text-sm">LogIn With Google</p>
+                </div>
             </form>
         </div>
     );
