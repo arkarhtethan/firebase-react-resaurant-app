@@ -15,7 +15,7 @@ import UserInfo from "./UserInfo";
 
 export default function Sidebar () {
     const [showNav, setShowNav] = useState(true);
-    const { currentUser: user, logoutUser } = useAuth();
+    const { logoutUser } = useAuth();
 
 
     const isDesktop = useMediaQuery({
