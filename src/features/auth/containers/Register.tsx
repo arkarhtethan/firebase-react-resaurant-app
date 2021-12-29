@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 import { SubmitButton } from '../../../shared/button';
 import FormError, { ErrorMessage } from '../../../shared/error/FormError';
 import Header from '../../../shared/Header';
@@ -11,16 +12,25 @@ export const Register = () => {
     const { register, getValues, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange' });
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const { email, password, name } = getValues();
+    const { email, password } = getValues();
+    const { registerUser } = useAuth();
 
     const onSubmit = () => {
-        // mutate({ variables: { ...getValues() } })
+        setLoading(true);
+        if (registerUser) {
+            registerUser(email, password).then(res => {
+                setLoading(false);
+                navigate('/auth/login')
+            }).catch(err => {
+                setLoading(false);
+                setErrorMessage(err.message)
+            });
+        }
     }
 
     const isValid = () => {
         return (email && email.length !== 0)
             && (password && password.length !== 0)
-            && (name && name.length !== 0)
             && Object.entries(errors).length === 0;
     }
 
@@ -36,21 +46,6 @@ export const Register = () => {
                 <div className="mb-2">
                     {(errorMessage) && <FormError message={errorMessage} onClick={() => setErrorMessage(null)} />}
                 </div>
-                <input
-                    {...register("name", {
-                        required: {
-                            value: true,
-                            message: "This field is required."
-                        },
-                        minLength: {
-                            value: 5,
-                            message: "Your name must be at least 5 characters."
-                        }
-                    })}
-                    placeholder="Name"
-                    className="border-2 border-black p-2 md:mb-4 mb-2"
-                />
-                {errors.name && <ErrorMessage message={errors.name.message} />}
                 <input
                     {...register("email", {
                         required: {
@@ -88,7 +83,7 @@ export const Register = () => {
                     <span className="font-black mx-1 mt-1">OR</span>
                     <div className="h-4 border-gray-500 border-b-2 w-1/2"></div>
                 </div>
-                <Link to="/login" className="mt-4 text-center border-black border-2 text-black py-2 h-10"> LOGIN </Link>
+                <Link to="/auth/login" className="mt-4 text-center border-black border-2 text-black py-2 h-10"> LOGIN </Link>
             </form>
         </div>
     )
