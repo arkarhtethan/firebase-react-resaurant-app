@@ -64,11 +64,11 @@ export default function Sidebar () {
                         icon={faUtensils}
                         title={"Menu"}
                     />
-                    <SidebarNavItem
+                    {/* <SidebarNavItem
                         url="/profile/account"
                         icon={faUserCog}
                         title={"Account"}
-                    />
+                    /> */}
                 </div>
                 <div className="bg-gray-100 lg:mt-2 shadow-lg" onClick={logoutHandler}>
                     <SidebarNavItem url="/" icon={faReply} title={"Log Out"} />
