@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMapMarkerAlt, faPhoneAlt } from '@fortawesome/free-solid-svg-icons'
+import { faMapMarkerAlt, faPhoneAlt, faRoad } from '@fortawesome/free-solid-svg-icons'
 
 interface IRestaurantDetailsHeaderProps {
     name: string;
     imageUrl: string;
-    location: string;
+    city: string;
+    street: string;
     phone: string;
 }
-const RestaurantDetailsHeader = ({ name, location, imageUrl, phone }: IRestaurantDetailsHeaderProps) => {
+const RestaurantDetailsHeader = ({ name, city, imageUrl, phone, street }: IRestaurantDetailsHeaderProps) => {
     return (
         <div
             className="h-full bg-cover bg-no-repeat w-full bg-center flex items-center relative"
@@ -23,9 +24,13 @@ const RestaurantDetailsHeader = ({ name, location, imageUrl, phone }: IRestauran
                 </h4>
                 <div className="flex space-x-3 items-center">
                     <FontAwesomeIcon icon={faMapMarkerAlt} />
-                    <h6 className="text-base mt-1">{location}</h6>
+                    <h6 className="text-base mt-1">{city}</h6>
                 </div>
-                <div className="flex space-x-3 items-center mt-2">
+                <div className="flex space-x-3 items-center">
+                    <FontAwesomeIcon icon={faRoad} />
+                    <h6 className="text-base mt-1">{street}</h6>
+                </div>
+                <div className="flex space-x-3 items-center">
                     <FontAwesomeIcon icon={faPhoneAlt} />
                     <h6 className="text-base text-gray-800 font-semibold mt-1">{phone}</h6>
                 </div>
