@@ -68,7 +68,7 @@ export const Login = () => {
 
     return (
         <div className="py-16 mx-2">
-            <Header title="LOGIN" description="Log in to your account." />
+            <Header title="Login" description="Log in to your account." />
             <form
                 className="flex flex-col w-full md:w-1/2 lg:w-1/3 bg-white shadow-lg p-4 mx-auto"
                 onSubmit={handleSubmit(onSubmit)}

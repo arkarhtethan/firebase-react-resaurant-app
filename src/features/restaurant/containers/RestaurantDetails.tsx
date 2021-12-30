@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getRetaurantById, IRestaurant } from "../../../services/restaurant";
 import { getMenuItems, IMenu } from "../../../services/menu";
 import LoadingCmp from "../../../shared/loader/LoadingCmp";
+import Header from "../../../shared/Header";
 
 const RestaurantDetails = (props: any) => {
     const { id } = useParams();
@@ -118,6 +119,7 @@ const RestaurantDetails = (props: any) => {
 
     return (
         <div className="">
+            <Header title={restaurant.name} description={`Restaurant details for ${restaurant.name} .`} />
             <div className="h-80 w-full">
                 <RestaurantDetailsHeader
                     name={restaurant.name}
