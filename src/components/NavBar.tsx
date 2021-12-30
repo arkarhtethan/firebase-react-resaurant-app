@@ -27,7 +27,7 @@ const NavBar = () => {
 
     const Dropdown = () => {
         return <>
-            <div className="relative inline-block text-left">
+            <div className="relative inline-block text-left z-10">
                 <div>
                     <button onClick={() => setOpenDropdown(!openDropdown)} type="button" className="inline-flex justify-center w-full px-0 lg:px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none">
                         {userInfo && userInfo.email}
@@ -57,11 +57,6 @@ const NavBar = () => {
                             <li className="py-2">
                                 <Link to="/" className={"text-xl font-bold"}>Restaurant App</Link>
                             </li>
-
-                            <li className="py-2">
-                                <Link to="/profile" className={"text-xl font-bold"}>Profile</Link>
-                            </li>
-
                         </ul>
                     </div>
                 </div>
@@ -85,9 +80,6 @@ const NavBar = () => {
                     <Link to="/">
                         Restaurant App
                     </Link>
-                    <Link to="/profile">
-                        Profile
-                    </Link>
                 </h3>
                 <button className="outline-none mobile-menu-button" onClick={() => setOpen(!open)}>
                     <svg className=" w-6 h-6 text-gray-500 hover:text-gray-500 "
@@ -108,7 +100,7 @@ const NavBar = () => {
                 <ul className="mt-4">
                     <li className=""><Link to="/" className="block text-sm px-2 py-4 hover:text-black">Home</Link></li>
                     <li className="px-2 py-4 text-sm">
-                        {userInfo?.email ? <Dropdown /> :
+                        {userInfo ? <Dropdown /> :
                             <>
                                 <Link to="/auth/login">
                                     Login
