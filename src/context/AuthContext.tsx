@@ -38,6 +38,8 @@ export default function AuthContextProvider ({ children }: { children: any }) {
                         setUserInfo(doc.data() as IUser);
                     });
                 })
+            } else {
+                setUserInfo(null);
             }
         });
         return () => {
