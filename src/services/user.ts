@@ -1,5 +1,5 @@
 import { db } from "../utils/firebase";
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, getDoc, query, where } from "firebase/firestore"
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore"
 
 const userCollectionRefs = collection(db, 'user')
 

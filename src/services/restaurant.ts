@@ -1,9 +1,8 @@
 import { db } from "../utils/firebase";
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where } from "firebase/firestore"
-
-const restaurantsCollectionRefs = collection(db, 'restaurant')
+import { collection, getDocs, addDoc, updateDoc, doc, query, where, getDoc } from "firebase/firestore"
 
 export interface IRestaurant {
+    id?: string;
     name: string;
     phoneNumber: string;
     image: string;
@@ -12,15 +11,24 @@ export interface IRestaurant {
     userId: string;
 }
 
-export function findRetaurantById (id: string) {
-    console.log(id);
+const restaurantsCollectionRefs = collection(db, 'restaurant')
+
+export function findRetaurantByUserId (id: string) {
     const q = query(restaurantsCollectionRefs, where("userId", "==", id));
     return getDocs(q);
 }
 
+export function getRetaurantById (restaurantId: string) {
+    const menuDoc = doc(db, "restaurant", restaurantId)
+    return getDoc(menuDoc);
+}
+
+export function getRetaurants () {
+    return getDocs(restaurantsCollectionRefs);
+}
+
 export async function createRetaurant (data: IRestaurant) {
-    const snapshot = await findRetaurantById(data.userId)
-    console.log(snapshot.empty)
+    const snapshot = await findRetaurantByUserId(data.userId)
     if (snapshot.empty) {
         return addDoc(restaurantsCollectionRefs, data)
     } else {
