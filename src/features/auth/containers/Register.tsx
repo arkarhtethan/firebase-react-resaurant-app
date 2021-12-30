@@ -11,7 +11,7 @@ import Header from '../../../shared/Header';
 export const Register = () => {
     const [errorMessage, setErrorMessage] = useState(null);
 
-    const { register, getValues, watch, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange' });
+    const { register, watch, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange' });
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const { email, password, name } = watch();
@@ -19,7 +19,6 @@ export const Register = () => {
     const mounted = useMounted();
 
     const onFinish = (data: any) => {
-        console.log();
         if (mounted) {
             createUser({ name, email, id: data.user.uid })
             setLoading(false);
