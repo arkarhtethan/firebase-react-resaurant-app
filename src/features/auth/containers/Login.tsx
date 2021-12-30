@@ -12,10 +12,10 @@ export const Login = () => {
     const {
         register,
         handleSubmit,
-        reset,
         getValues,
         formState: { errors },
     } = useForm({ mode: "onChange" });
+
     const { email, password } = getValues();
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState(null);
@@ -25,22 +25,26 @@ export const Login = () => {
 
     const mounted = useMounted();
 
+    const loginSuccessHandler = () => {
+        if (mounted) {
+            setLoading(false);
+            navigate("/profile");
+        }
+    };
+
+    const loginErrorHandler = (err: any) => {
+        if (mounted) {
+            setLoading(false);
+            setErrorMessage(err.message);
+        }
+    };
+
     const onSubmit = () => {
         if (loginUser && mounted) {
             setLoading(true);
             loginUser(email, password)
-                .then(res => {
-                    if (mounted) {
-                        setLoading(false);
-                        navigate('/profile')
-                    }
-                })
-                .catch(err => {
-                    if (mounted) {
-                        setLoading(false);
-                        setErrorMessage(err.message)
-                    }
-                });
+                .then(loginSuccessHandler)
+                .catch(loginErrorHandler);
         }
     };
 
@@ -59,19 +63,7 @@ export const Login = () => {
     };
 
     const loginWithGoogle = () => {
-        signInWithGoogle()
-            .then((res) => {
-                if (mounted) {
-                    setLoading(false);
-                    navigate('/profile')
-                }
-            })
-            .catch((err) => {
-                if (mounted) {
-                    setErrorMessage(err.message)
-                    setLoading(false);
-                }
-            });;
+        signInWithGoogle().then(loginSuccessHandler).catch(loginErrorHandler);
     };
 
     return (
@@ -82,7 +74,9 @@ export const Login = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 onChange={handleChange}
             >
-                <h2 className="lg:text-2xl text-lg mb-4 font-bold">Log In To Your Account </h2>
+                <h2 className="lg:text-2xl text-lg mb-4 font-bold">
+                    Log In To Your Account{" "}
+                </h2>
                 <div
                     className={`mb-2 ${errorMessage ? "block" : "hidden"
                         } duration-300 transition-all`}
@@ -127,9 +121,7 @@ export const Login = () => {
                         isValid={isValid()}
                     />
                 </div>
-                <div
-                    className="flex items-center justify-between w-full"
-                >
+                <div className="flex items-center justify-between w-full">
                     <Link to="/auth/register" className="text-sm font-bold text-gray-500">
                         Forgot Password
                     </Link>
@@ -142,7 +134,10 @@ export const Login = () => {
                     <p className="mx-2">OR</p>
                     <hr className="border-gray-500 w-full" />
                 </div>
-                <div onClick={loginWithGoogle} className="text-center border-black border-2 text-black py-2 flex justify-center items-center cursor-pointer">
+                <div
+                    onClick={loginWithGoogle}
+                    className="text-center border-black border-2 text-black py-2 flex justify-center items-center cursor-pointer"
+                >
                     <span className="mr-2 font-bold text-xl">G</span>
                     <p className="text-sm">LogIn With Google</p>
                 </div>
