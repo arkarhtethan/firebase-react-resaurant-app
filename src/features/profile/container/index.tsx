@@ -26,7 +26,7 @@ const ProfileIndex = () => {
                     <Routes>
                         <Route path="/" element={<EditRestaurant />} />
                         <Route path="edit-restaurant" element={<EditRestaurant />} />
-                        <Route path="account" element={<AccountDelete />} />
+                        {/* <Route path="account" element={<AccountDelete />} /> */}
                         <Route path="menu" element={<Menu />} />
                         <Route path="*" element={<Navigate to="/404" />} />
                     </Routes>
