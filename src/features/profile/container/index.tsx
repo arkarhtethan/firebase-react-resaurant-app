@@ -2,7 +2,6 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
 import Header from '../../../shared/Header'
 import Sidebar from '../components/SideBar'
-import AccountDelete from './AccountDelete'
 import EditRestaurant from './restaurant/EditRestaurant'
 import Menu from './restaurant/Menu'
 

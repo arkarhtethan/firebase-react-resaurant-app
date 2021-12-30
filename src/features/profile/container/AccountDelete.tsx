@@ -1,6 +1,5 @@
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { SolidButton } from "../../../shared/button";
 import Header from "../../../shared/Header";
 import Modal from "../../../shared/Modal";
@@ -10,8 +9,6 @@ export default function AccountDelete () {
     const confirmDelete = () => {
         setShowModal(true);
     }
-
-    const navigate = useNavigate();
 
     const deleteAccount = () => {
         setShowModal(false);

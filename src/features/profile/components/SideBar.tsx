@@ -2,7 +2,6 @@ import {
     faCaretUp,
     faCaretDown,
     faReply,
-    faUserCog,
     faUserEdit,
     faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
